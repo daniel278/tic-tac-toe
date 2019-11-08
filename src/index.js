@@ -13,18 +13,24 @@ function Square(props) {
 }
 
   class Board extends React.Component {
+    
     handleClick(i){
       const squares = this.state.squares.slice();
       if(calculateWinner(squares) || squares[i]){
         return;
-      }
-      console.log(squares[i]);
+      }      
+      console.log(squares);
+      
       
       squares[i] = this.state.xIsNext ? 'X' : 'O';
       this.setState({
         squares: squares,
         xIsNext: !this.state.xIsNext,
-      });      
+        
+      });
+      if (squares.every(endgame) &&  calculateWinner(squares) == null) {
+        alert("Draw");
+      }      
     }
 
     constructor(props){
@@ -36,8 +42,8 @@ function Square(props) {
     }
 
     renderSquare(i) {
-      return <Square value=
-        {this.state.squares[i]}
+      return <Square 
+        value={this.state.squares[i]}
         onClick={() => this.handleClick(i)} 
         />;
     }
@@ -51,6 +57,9 @@ function Square(props) {
       } else {
         status = "Next Player: " + (this.state.xIsNext ? 'X' : 'O');
       }
+      if (this.state.squares.every(endgame) &&  calculateWinner(this.state.squares) == null) {
+        status = "Draw";
+      }   
   
       return (
         <div>
@@ -126,4 +135,8 @@ function Square(props) {
       }
     }
     return null;
+  }
+
+  function endgame(x){
+    return x !== null;
   }
