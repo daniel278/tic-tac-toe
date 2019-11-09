@@ -5,6 +5,12 @@ body {
   
   ol, ul {
     padding-left: 30px;
+    list-style-type: none;
+  }
+
+  li{
+    text-align: center;
+    margin: 1em;
   }
 
   .header{
@@ -52,13 +58,8 @@ body {
     background: #ddd;
   }
   
-  .game-board{
+  .game{
       margin-top: 20px;
       display: flex;
       justify-content: center;
   }
-  
-  .game-info {
-    margin-left: 20px;
-  }
-  
