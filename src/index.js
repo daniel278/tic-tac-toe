@@ -88,8 +88,6 @@ function Square(props) {
       
       squares[i] = this.state.xIsNext ? 'X' : 'O';
       squaresnumber.push(x);
-      console.log(squaresnumber);
-
 
       this.setState({
         history: history.concat([{
@@ -121,19 +119,26 @@ function Square(props) {
       
       const historynumber = this.state.historynumber;
       const currentnumber = historynumber[historynumber.length-1];
-      console.log(currentnumber.squaresnumber);
-      
+      const p = historynumber.length-2;      
+      const k = currentnumber.squaresnumber[p];
+
 
       const movesnumber = historynumber.map((step,move)=>{
-        return(
-          <p className="chess" key={move}>{currentnumber.squaresnumber[move]}</p>
-        );
+          console.log(move);
+          
+          console.log(currentnumber.squaresnumber[move]);
+          if (currentnumber.squaresnumber[move] == k) {
+            return(
+              <p className="chess strong" key={move}>{currentnumber.squaresnumber[move]}</p>
+            );
+          }
+          else{
+            return(
+              <p className="chess" key={move}>{currentnumber.squaresnumber[move]}</p>
+            );
+          }
         }
       );
-      console.log(historynumber);
-      console.log(history);
-      
-      
 
       const moves = history.map(( step, move)=>{
         const desc = move ? 
