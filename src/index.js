@@ -61,24 +61,44 @@ function Square(props) {
         }],
         xIsNext: true,
         stepNumber: 0,
-      }
+        historynumber: [{
+          squaresnumber: Array(0),
+        }],
+      }      
     }
 
     handleClick(i){
       const history = this.state.history.slice(0, this.state.stepNumber + 1);
       const current = history[history.length-1];
       const squares = current.squares.slice();
+
+      const historynumber = this.state.historynumber.slice(0, this.state.stepNumber + 1);
+      const currentnumber = historynumber[historynumber.length-1];
+      const squaresnumber = currentnumber.squaresnumber.slice();
+
       if(calculateWinner(squares) || squares[i]){
         return;
-      }            
+      } 
+      
+      const mapa = ["1:1", "1:2", "1:3", "2:1", "2:2", "2:3", "3:1", "3:2", "3:3"];
+      const stepNumber = " Movimiento "+ this.state.stepNumber + ".";
+      const y =  this.state.xIsNext ? ' X ' + mapa[i] + " ":' O ' + mapa[i] + " ";
+      const x =  stepNumber + y;
       
       squares[i] = this.state.xIsNext ? 'X' : 'O';
+      squaresnumber.push(x);
+      console.log(squaresnumber);
+
+
       this.setState({
         history: history.concat([{
           squares: squares,
         }]),
         xIsNext: !this.state.xIsNext,
         stepNumber: history.length,
+        historynumber: historynumber.concat([{
+          squaresnumber: squaresnumber,
+        }]),
       });
       //if (squares.every(endgame) &&  calculateWinner(squares) == null) {
       //  alert("Draw");
@@ -93,20 +113,19 @@ function Square(props) {
     }
 
     render() {
-
-      const history = this.state.history;
-      console.log("history " + history);
       
+      const history = this.state.history;      
       const current = history[this.state.stepNumber];      
-      const winner = calculateWinner(current.squares);
+      const winner = calculateWinner(current.squares); 
       
+      const historynumber = this.state.historynumber;
+      const currentnumber = historynumber[historynumber.length-1];
+
       const moves = history.map(( step, move)=>{
         const desc = move ? 
           "Go to  move # " + move :
-          "Go to game start";
-          console.log(move);
-          console.log(step);
-          
+          "Go to game start";                    
+
           return (
           <li key={move}>
             <button  type="button" className="btn btn-primary" onClick={()=> this.jumpTo(move)}>{desc}</button>
@@ -140,6 +159,7 @@ function Square(props) {
               <ol>{moves}</ol>
             </div>
           </div>
+          <footer>{currentnumber.squaresnumber}</footer>
         </div>
       );
     }
