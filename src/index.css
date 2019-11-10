@@ -8,12 +8,12 @@ body {
     list-style-type: none;
   }
 
-  li{
-    text-align: center;
-    margin: 1em;
+  p{
+    margin: 0 1em;
   }
 
-  p{
+  li{
+    text-align: center;
     margin: 1em;
   }
 
@@ -33,6 +33,17 @@ body {
       text-align: center;
       background-color: steelblue;
   }
+
+  .chessb{
+    height: 30px;
+    display: inline-flex;
+    width: 100%;
+    color: white;
+    background-color: dimgray;
+    margin: 0;
+  }
+
+
   
   .board-row:after {
     clear: both;

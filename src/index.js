@@ -12,15 +12,6 @@ function Square(props) {
   );
 }
 
-function ListItem(props){
-  return(
-    <div>
-      <button  type="button" className="btn btn-primary" onClick={props.onClick}>{props.other}</button>
-      <p>{props.m}</p>
-    </div>
-  );
-}
-
   class Board extends React.Component {
     renderSquare(i) {
       return <Square 
@@ -91,8 +82,8 @@ function ListItem(props){
       
       const mapa = ["1:1", "1:2", "1:3", "2:1", "2:2", "2:3", "3:1", "3:2", "3:3"];      
       const m = this.state.stepNumber+1;
-      const stepNumber = " Move # "+ m ;
-      const y =  this.state.xIsNext ? ' ( X ' + mapa[i] + " )":' ( O ' + mapa[i] + " )";
+      const stepNumber =  m + "." ;
+      const y =  this.state.xIsNext ? ' X ' + mapa[i]:' O ' + mapa[i];
       const x =  stepNumber + y;
       
       squares[i] = this.state.xIsNext ? 'X' : 'O';
@@ -130,15 +121,28 @@ function ListItem(props){
       
       const historynumber = this.state.historynumber;
       const currentnumber = historynumber[historynumber.length-1];
+      console.log(currentnumber.squaresnumber);
+      
+
+      const movesnumber = historynumber.map((step,move)=>{
+        return(
+          <p className="chess" key={move}>{currentnumber.squaresnumber[move]}</p>
+        );
+        }
+      );
+      console.log(historynumber);
+      console.log(history);
+      
+      
+
       const moves = history.map(( step, move)=>{
         const desc = move ? 
           "Go to  move # " + move :
-          "Go to game start";
-                                        
+          "Go to game start";                              
           return (
-          <ListItem key={move} value={move} other={desc} 
-          m={currentnumber.squaresnumber[move]} 
-          onClick={()=> this.jumpTo(move)}/>
+            <li key={move}>
+              <button  type="button" className="btn btn-primary" onClick={()=> this.jumpTo(move)}>{desc}</button>
+            </li>
           );
         }
 
@@ -157,7 +161,8 @@ function ListItem(props){
 
       return (
         <div>
-          <Header />  
+          <Header />
+          <div className="chessb">{movesnumber}</div>  
           <div className="game">
             <div className="game-board">
               <Board 
