@@ -3,20 +3,29 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 function Square(props) {
+  const winningSquareStyle = {
+    backgroundColor: 'cyan',
+  };
+
   return (
     <button
       className="square"
-      onClick={props.onClick}>
+      onClick={props.onClick}
+      style={props.hightlight ? winningSquareStyle : null}>
       {props.value}
     </button>
   );
 }
 
   class Board extends React.Component {
-    renderSquare(i) {
+    renderSquare(i) {              
+      if (this.props.hightlight[i] === 0) {
+        this.props.hightlight[i] = 1;
+      }
       return <Square 
-        value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)} 
+        hightlight={this.props.hightlight[i]}
+        value={this.props.squares[i] ? this.props.squares[i]: null}
+        onClick={() => this.props.onClick(i)}
         />;
     }
   
@@ -58,6 +67,10 @@ function Square(props) {
         historynumber: [{
           squaresnumber: Array(0),
         }],
+        statecolor: true,
+        color: [{
+          winsquares: Array(9).fill(null),
+        }],
       }      
     }
 
@@ -86,6 +99,7 @@ function Square(props) {
       const history = this.state.history.slice(0, this.state.stepNumber + 1);
       const current = history[history.length-1];
       const squares = current.squares.slice();
+      
 
       const historynumber = this.state.historynumber.slice(0, this.state.stepNumber + 1);
       const currentnumber = historynumber[historynumber.length-1];
@@ -120,16 +134,44 @@ function Square(props) {
 
     jumpTo(step){
       this.setState({
+        statecolor: true,
         stepNumber: step,
         xIsNext: (step % 2 ) === 0,
+        color: [{
+          winsquares: Array(9).fill(null),
+        }]
       });
+    }
+
+    colorsquares(a)
+    {
+      const color = this.state.color;      
+      const l = color[0];
+      const g = l.winsquares;
+      
+      const x = a[0];
+      const y = a[1];
+      const z = a[2];
+
+      g[x] = x;
+      g[y] = y;
+      g[z] = z;            
+
+      this.setState({
+        statecolor: false,
+        color: color.concat([{
+          winsquares: g,
+        }])
+      });      
     }
 
     render() {
       
       const history = this.state.history;      
       const current = history[this.state.stepNumber];      
-      const winner = calculateWinner(current.squares); 
+      const winner = calculateWinner(current.squares);
+
+      const statecolor = this.state.statecolor;
       
       const historynumber = this.state.historynumber;
       const currentnumber = historynumber[historynumber.length-1];
@@ -165,9 +207,12 @@ function Square(props) {
       );
       
       let status;
-      if (winner) {
+      if (winner && statecolor) {
         alert("Congratulations, " + winner + " Won");
         status = "Winner : " + winner;
+        
+        this.colorsquares(calculatecolor(current.squares));
+        
       } else {
         status = "Next Player: " + (this.state.xIsNext ? 'X' : 'O');
       }
@@ -183,7 +228,8 @@ function Square(props) {
             <div className="game-board">
               <Board 
                 squares={current.squares}
-                onClick={(i)=> this.handleClick(i)}/>
+                onClick={(i)=> this.handleClick(i)}
+                hightlight={this.state.color[0].winsquares}/>
                 <div id="switch">
                   <button 
                     type="button" 
@@ -236,3 +282,26 @@ function Square(props) {
     }
     return null;
   }
+  function calculatecolor(squares) {
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        return lines[i];
+      }
+    }
+    return null;
+  }
+
+  //function endgame(x) {
+   // return x !== null;
+  //}

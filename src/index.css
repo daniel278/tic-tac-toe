@@ -92,6 +92,10 @@ body {
     font-weight: bold;
   }
 
+  .winsquare{
+    background-color: cyan;
+  }
+
   #switch{
     margin: 1em;
     text-align: center;
