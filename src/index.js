@@ -21,23 +21,17 @@ function Square(props) {
     }
   
     render() {
+      const drawSquares = [];
+      for (let row = 0; row < 3; row++) {
+        const drawRow = [];
+        for (let col = 0; col < 3; col++) {
+          drawRow.push(<span key={(row*3)+col}>{this.renderSquare((row*3)+col)}</span>)
+        }      
+        drawSquares.push(<div className="board-row" key={row}>{drawRow}</div>) 
+      }
       return (
         <div>
-          <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
-          </div>
+          {drawSquares}
         </div>
       );
     }
@@ -67,6 +61,27 @@ function Square(props) {
       }      
     }
 
+    handleBack(){      
+      const step = this.state.stepNumber;
+
+      if ((step-1) >= 0) {
+        this.jumpTo(step-1);        
+      } else {
+        return
+      }
+
+    }
+
+    handleNext(){
+      const step = this.state.stepNumber;
+      
+      if (step === this.state.history.length-1) {
+        return
+      } else {
+        this.jumpTo(step+1);
+      }
+    }
+
     handleClick(i){
       const history = this.state.history.slice(0, this.state.stepNumber + 1);
       const current = history[history.length-1];
@@ -88,7 +103,6 @@ function Square(props) {
       
       squares[i] = this.state.xIsNext ? 'X' : 'O';
       squaresnumber.push(x);
-
       this.setState({
         history: history.concat([{
           squares: squares,
@@ -123,11 +137,8 @@ function Square(props) {
       const k = currentnumber.squaresnumber[p];
 
 
-      const movesnumber = historynumber.map((step,move)=>{
-          console.log(move);
-          
-          console.log(currentnumber.squaresnumber[move]);
-          if (currentnumber.squaresnumber[move] == k) {
+      const movesnumber = historynumber.map((step,move)=>{          
+          if (currentnumber.squaresnumber[move] === k) {
             return(
               <p className="chess strong" key={move}>{currentnumber.squaresnumber[move]}</p>
             );
@@ -173,6 +184,21 @@ function Square(props) {
               <Board 
                 squares={current.squares}
                 onClick={(i)=> this.handleClick(i)}/>
+                <div id="switch">
+                  <button 
+                    type="button" 
+                    className="btn btn-primary" 
+                    id="btn-left" 
+                    onClick={() => this.handleBack()}>
+                      -
+                  </button>
+                  <button type="button" 
+                  className="btn btn-primary" 
+                  id="btn-right" 
+                  onClick={() => this.handleNext()}>
+                    +
+                  </button>
+                </div>
             </div>
             <div className="game-info">
               <div className="status">{status}</div>
